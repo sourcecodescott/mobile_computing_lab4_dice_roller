@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Dice Roller</string>
+    <string name="roll">Roll</string>
+    <string name="onStart_counter">Number of times onStart called: %d</string>
+    <string name="dice_roll_counter">Dice Roll count: %d</string>
+    <string name="no_accelerometers">No accelerometer detected. Cannot detect shakes.</string>
+</resources>
