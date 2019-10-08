@@ -52,22 +52,48 @@ class MainActivity : AppCompatActivity() {
             no_accelerometer_message.visibility = View.VISIBLE
 
         /* TODO 3b: If savedInstanceState is not null, fetch the value of startCount from Bundle. */
-        // startCount =
+
+        if(savedInstanceState != null){
+            startCount = savedInstanceState.getInt(START_COUNTER, startCount)
+        }
+
     }
 
     override fun onStart() {
         super.onStart()
 
         /* TODO 2: Increment the startCount value. */
+        startCount++
 
         /* TODO 4b: Fetch the saved rollCount value from sharedPreferences. */
 
+
+        rollCount = sharedPreferences.getInt(ROLL_COUNTER,rollCount)
         start_counter.text = getString(R.string.onStart_counter, startCount)
         roll_counter.text = getString(R.string.dice_roll_counter, rollCount)
+
+
+
+
+
+
     }
 
 
     /* TODO 4a: Override the onStop and save the rollCount value in sharedPreferences. (key=ROLL_COUNTER) */
+
+    override fun onStop() {
+        super.onStop()
+
+        val shared = this?.getPreferences(Context.MODE_PRIVATE) ?: return
+        with(shared.edit()){
+            putInt(ROLL_COUNTER, rollCount)
+            apply()
+        }
+
+    }
+
+
 
 
     /* TODO 1a: Override the onResume Method to do the following:
@@ -76,11 +102,39 @@ class MainActivity : AppCompatActivity() {
      *       Provide your own ShakeListener. (See ShakeDetector class.)
      */
 
+    override fun onResume() {
+        super.onResume()
+        if (shakeDetector.isSupported()){
+            shakeDetector.startListening(object :ShakeDetector.ShakeListener{
+                override fun onShake(force: Float) {
+                    rollDice()
+                }
+            })
+        }
+
+    }
+
 
     /* TODO 1b: Override the onPause Method and stopListening for shakes using the stopListening method of ShakeDetector class */
 
+    override fun onPause() {
+        super.onPause()
+
+        if (shakeDetector.isSupported()){
+            shakeDetector.stopListening()
+        }
+    }
+
 
     /* TODO 3a: Override the (single-arg) onSaveInstanceState method and save the value of startCounter in the Bundle. (key=START_COUNTER) */
+
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putInt(START_COUNTER, startCount)
+    }
+
+
 
 
 
